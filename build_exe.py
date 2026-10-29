@@ -9,12 +9,10 @@ ROOT = Path(__file__).resolve().parent
 ENTRY = ROOT / "main.py"
 DB_FILE = ROOT / "printbill.db"
 
-
 def ensure_runtime_dirs() -> None:
     for folder in ("invoices", "exports"):
         path = ROOT / folder
         path.mkdir(exist_ok=True)
-
 
 def build_exe() -> None:
     if not ENTRY.exists():
@@ -47,7 +45,6 @@ def build_exe() -> None:
         print(f"\nEXE created: {dist_exe}")
     else:
         print("\nBuild finished, but the expected EXE file was not found in dist/.")
-
 
 if __name__ == "__main__":
     build_exe()
