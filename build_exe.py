@@ -14,37 +14,22 @@ def ensure_runtime_dirs() -> None:
         path = ROOT / folder
         path.mkdir(exist_ok=True)
 
-def build_exe() -> None:
-    if not ENTRY.exists():
-        raise FileNotFoundError(f"Entry script not found: {ENTRY}")
-    if not DB_FILE.exists():
-        raise FileNotFoundError(f"Database file not found: {DB_FILE}")
-
+def build_exe():
     ensure_runtime_dirs()
 
-    pyinstaller = [sys.executable, "-m", "PyInstaller"]
-    sep = ";" if os.name == "nt" else ":"
-
     cmd = [
-        *pyinstaller,
+        sys.executable, "-m", "PyInstaller",
         "--name", "PrintBillPro",
         "--onefile",
         "--windowed",
         "--clean",
         "--noconfirm",
-        "--add-data", f"{DB_FILE}{sep}.",
-        str(ENTRY),
+        "--add-data", f"{DB_FILE};.",
+        str(ENTRY)
     ]
 
-    print("Running:")
-    print(" ".join(cmd))
+    print("Running:", " ".join(cmd))
     subprocess.run(cmd, cwd=str(ROOT), check=True)
-
-    dist_exe = ROOT / "dist" / ("PrintBillPro.exe" if os.name == "nt" else "PrintBillPro")
-    if dist_exe.exists():
-        print(f"\nEXE created: {dist_exe}")
-    else:
-        print("\nBuild finished, but the expected EXE file was not found in dist/.")
 
 if __name__ == "__main__":
     build_exe()
